@@ -1,0 +1,38 @@
+.mainCard {
+    margin-top: 5vh;
+}
+.card {
+    position: relative;
+    background-color: green;
+    width: 86vw;
+    height: 75vh;
+    min-height: 300px;
+    box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    justify-content: flex-start;
+  }
+.swipe {
+    position:absolute;
+}
+
+.cardContent {
+    padding-left: 1rem;
+}
+
+.linkStyle{
+    color: white;
+    padding-left: 1rem;
+}
+
+.achive{
+    display: flex;
+}
+
+.buttonlist {
+    height: 10vh;
+    background-color: #535bf2;
+
+}
+

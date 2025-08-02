@@ -1,0 +1,136 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.flexSpacer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+}
+
+.note {
+    font-size: 12px;
+    color: gray;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.closeBtn {
+    font-size: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.search {
+    position: sticky;
+    padding: 10px 12px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    height: 2.2vh;
+}
+
+.closetList {
+    padding-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.closetItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+}
+
+.closetItem img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.radioInput {
+    display: none;
+}
+
+.customRadio {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    background-color: #535bf2;
+}
+
+.customRadio:hover {
+    border-color: #444;
+}
+
+.checkmark {
+    color: white;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: bold;
+}
+
+.note {
+    margin-top: 20px;
+    font-size: 12px;
+    color: gray;
+}
+
+.newClosetBtn {
+    font-size: 150%;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 0 16px 0;
+    border: none;
+    background: none;
+    color: black;
+    cursor: pointer;
+}
+
+.doneBtn {
+    background-color: #3b5bff;
+    color: white;
+    font-size: 18px;
+    padding: 14px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}

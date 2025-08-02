@@ -1,0 +1,223 @@
+.container {
+    display: grid;
+    grid-template-rows: 45% 55%;
+    height: 94vh;
+    width: 100vw;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    position: relative;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+.slider {
+    position: relative;
+    width: 92%;
+    height: 42vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 4%;
+    border-radius: 10px;
+}
+
+.sliderInner {
+    display: flex;
+    width: 100%;
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+.backButton {
+    position: absolute;
+    z-index: 1000;
+    top: 5px;
+    left: 5px;
+    background-color: transparent;
+}
+.shareButton {
+    position: absolute;
+    z-index: 1000;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+
+}
+.progressDots {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.dot.active {
+    background-color: var(--white);
+}
+
+.infoCard {
+    padding: 16px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--dark-gray);
+}
+.brand {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--light-warm-gray);
+}
+
+.price {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 16px 0;
+    color: var(--dark-gray);
+}
+.blockTitle {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 0;
+    color: var(--dark-gray);
+}
+
+.description {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--black);
+    line-height: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--light-gray);
+}
+.bar {
+    display: flex;
+    overflow-x: auto;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+    scrollbar-width: none;
+    gap: 8px;
+    flex-wrap: nowrap;
+    width: 96vw;
+}
+.bar::-webkit-scrollbar {
+    display: none;
+}
+
+.sizeOption {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 12px;
+    border-bottom: 1px solid var(--light-gray);
+
+
+}
+.sizeOption.active {
+    border-color: 1px solid var(--black);
+}
+.colorTitle {
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 5px;
+
+}
+.colorCircle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    margin: 5px;
+    border: 1px solid var(--light-gray);
+
+}
+.colorCircleWrapper {
+    display: flex;
+    flex-direction: row; /* Изменено с column на row */
+    align-items: center;
+    cursor: pointer;
+    overflow-x: auto; /* Добавлено для горизонтального скролла */
+    white-space: nowrap; /* Предотвращает перенос элементов */
+}
+.colorsContainer {
+    width: 100%;
+    overflow-x: auto;
+    padding: 8px 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    display: flex;
+    flex-direction: row;
+}
+.colorHeader {
+    display: flex;
+    align-items: center;
+}
+.colorsContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.colorCircleWrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 8px;
+    flex-shrink: 0;
+}
+.colorCircle.selected {
+    border: 1px solid var(--black);
+    transform: scale(1.2);
+}
+.border {
+    border-bottom: 1px solid var(--light-gray);
+}
+.infoSection {
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.infoRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+
+.infoLabel {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--light-cold-gray);
+    flex: 0 0 50%;
+    text-align: left;
+}
+
+.infoValue {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--black);
+    flex: 0 0 48%;
+    padding-left: 10px;
+}

@@ -1,0 +1,179 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+    box-sizing: border-box;
+    margin-bottom: 6vh;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.cardItems {
+    width: 94%;
+    padding: 3%;
+}
+
+.cartItem {
+    position: relative;
+    display: flex;
+    padding-bottom: 15px;
+}
+
+.itemImage {
+    min-width: 25vw;
+    min-height: 30vw;
+    max-width: 25vw;
+    max-height: 30vw;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+
+.itemDetails {
+    flex-grow: 1;
+    position: relative;
+    padding-right: 30px;
+}
+
+.itemTitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--black);
+}
+
+.itemBrand {
+    font-size: 12px;
+    color: var(--light-warm-gray);
+    margin-bottom: 4px;
+}
+
+.price {
+    font-weight: 400;
+    position: absolute;
+    font-size: 14px;
+    bottom: 5px;
+    color: var(--dark-gray);
+}
+
+.deleteButton {
+    position: absolute;
+    right: 5px;
+    bottom: 15px;;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+}
+.promoSection,
+.deliverySection,
+.summarySection {
+    margin-top: 20px;
+    padding-bottom: 15px;
+}
+
+.sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    padding: 10px 0;
+    cursor: pointer;
+}
+
+.promoInputGroup {
+    display: flex;
+    margin-top: 10px;
+}
+
+.promoInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.applyButton {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+
+.deliveryOption {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+}
+
+.deliveryInfo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.deliveryTime {
+    font-size: 12px;
+    color: #666;
+}
+
+.radioInput {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 5px;
+}
+
+.radioInput:checked {
+    background-color: #000;
+}
+
+.summarySection {
+    border: none;
+    padding-top: 10px;
+}
+
+.summaryRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.summaryRowTotal {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.inCreate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--beige);
+    width: 96vw;
+    height: 10vh;
+    margin: 4vw;
+    border-radius: 8px;
+}

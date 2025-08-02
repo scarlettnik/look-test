@@ -1,0 +1,93 @@
+.container {
+    width: 94vw;
+    padding: 3vw 3vw 0 3vw;
+
+}
+.tabs {
+    display: flex;
+    justify-content: space-between;
+
+}
+.tabs button {
+    width: 45vw;
+    height: calc(45vw / 4);
+    font-size: 12px;
+    background: var(--ultralight-gray);
+    border: none;
+    cursor: pointer;
+}
+.tabs .active {
+    border: 1px solid var(--black);
+    color: var(--black);
+}
+
+.trandsTitle {
+    padding-top: 2vh;
+    padding-bottom: 1vh;
+    font-size: 14px;
+    color: var(--black);
+}
+
+.scrollBlock {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    scroll-snap-type: x mandatory;
+}
+
+.card {
+    flex: 0 0 26%;
+    scroll-snap-align: start;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.cardImg {
+    width: 28vw;
+    height: 16vh;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.cardTitle {
+    max-width: 28vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.collectionsBlock {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-bottom: 60px;
+}
+
+.collectionCard {
+    position: relative;
+    overflow: hidden;
+    width: 46vw;
+    padding-bottom: 1vh;
+}
+
+.collectionImg {
+    width: 100%;
+    height: 7em;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.collectionTitle {
+    max-width: 46vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+}

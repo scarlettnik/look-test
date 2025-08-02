@@ -1,0 +1,156 @@
+.container {
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background: #fff;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 30px;
+}
+
+.measure {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.measure span {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.measure button {
+    font-size: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: #f0f0f0;
+    cursor: pointer;
+}
+
+.label {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.fitOptionsWrapper {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.fitOptions {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.fitOptions label {
+    flex: 1;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+
+.fitOptions input[type="radio"] {
+    display: none;
+}
+
+.fitOptions label.active {
+    font-weight: bold;
+}
+
+.underline {
+    height: 2px;
+    background: #ccc;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.triangle {
+    position: absolute;
+    bottom: -8px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid black;
+    transition: left 0.3s ease;
+    rotate: 30deg;
+}
+
+.triangle[data-fit="tight"] {
+    left: 15%;
+    transform: translateX(25%);
+}
+
+.triangle[data-fit="normal"] {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.triangle[data-fit="oversize"] {
+    left: 85%;
+    transform: translateX(-75%);
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkboxContainer input[type="checkbox"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid black;
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.checkboxContainer input[type="checkbox"]:checked::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    width: 6px;
+    height: 12px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.customCheckbox {
+    font-size: 14px;
+}
+
+.updateBtn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 30px;
+    cursor: pointer;
+}

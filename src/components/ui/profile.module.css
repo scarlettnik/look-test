@@ -1,0 +1,317 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100vw;
+}
+
+.userInfo {
+    padding-top: 20px;
+    text-align: center;
+    padding-bottom: 5px;
+}
+.avatar {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 8px;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: opacity 0.3s ease;
+}
+
+.avatarImage.hidden {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.skeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #e0e0e0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent);
+    animation: loadingWave 1.5s infinite;
+}
+
+@keyframes loadingWave {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.userName {
+    font-weight: 500;
+    font-size: 17px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.menuContainer {
+    overflow: hidden;
+    width: 100vw;
+}
+
+.menuItem {
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    border-bottom: 1px solid var(--light-gray);
+    cursor: pointer;
+    position: relative;
+}
+
+.menuIcon {
+    color: var(--black);
+    margin-right: 12px;
+}
+
+.menuLabel {
+    font-size: 16px;
+    color: #1f2937;
+}
+
+.devPanel {
+    position: absolute;
+    right: 20px;
+    z-index: 1;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    color: var(--light-warm-gray);
+}
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    z-index: 999;
+}
+
+.modalContent {
+    margin: auto;
+    background: white;
+}
+
+.avatarSkeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #ccc 25%, #e0e0e0 50%, #ccc 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.confirmDelete {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--black);
+    padding-bottom: 18px;
+}
+.paramsBlock {
+    margin: 2vw;
+    padding: 2vw;
+    background-color: var(--ultralight-gray);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.tabContent {
+    display: flex;
+    flex-direction: column;
+}
+.tabs {
+    display: flex;
+    justify-content: space-between;
+
+}
+.tabs button {
+    width: 45vw;
+    height: calc(45vw / 4);
+    font-size: 12px;
+    background: var(--white);
+    border: none;
+    cursor: pointer;
+}
+.tabs .active {
+    border: 1px solid var(--black);
+}
+.fitOptionsWrapper {
+    margin-top: 10px;
+}
+
+.sizesGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 6vw 4vw;
+}
+.selectedSize {
+    border: 1px solid var(--black);
+}
+.unSelectedSize {
+    border: 1px solid transparent;
+}
+
+.sizeBox {
+    text-align: center;
+    padding: 4px;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: 600;
+    background-color: var(--white);
+
+}
+.subText {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--light-warm-gray);
+}
+.paramsInputGroup {
+    margin: 5vw;
+}
+.paramControl {
+    text-align: center;
+    padding: 1vh;
+}
+
+.inputGroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.valueContainer {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.paramControl span {
+    font-size: 30px;
+    font-weight: 600;
+    padding: 0 2vh;
+    line-height: 1;
+}
+
+.paramControl label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--light-warm-gray);
+    margin-top: 4px;
+    order: 2;
+}
+
+.paramControl button {
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    color: var(--white);
+    background-color: var(--black);
+}
+.fitOptionsWrapper {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.fitOptions {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--dark-gray);
+}
+
+.fitOptions label {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    padding-bottom: 5px;
+}
+
+.fitOptions input[type="radio"] {
+    display: none;
+}
+
+.fitOptions label.active {
+    font-size: 14px;
+    color: var(--black);
+}
+
+.underline {
+    height: 2px;
+    background: var(--black);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.triangle {
+    position: absolute;
+    bottom: -8px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid black;
+    transition: left 0.3s ease;
+    rotate: 180deg;
+}
+
+.triangle[data-fit="tight"] {
+    left: 15%;
+    transform: translateX(25%);
+}
+
+.triangle[data-fit="normal"] {
+    left: 48%;
+    transform: translateX(-50%);
+}
+
+.triangle[data-fit="oversize"] {
+    left: 80%;
+    transform: translateX(-75%);
+}
+
+

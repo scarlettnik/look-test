@@ -1,0 +1,153 @@
+.container {
+    width: 96vw;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.cardsContainer {
+    flex-grow: 1;
+    padding-top: 2vh;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+}
+
+.onboardingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+
+.onboardingContent {
+    background: #3A4651;
+    border-radius: 10px;
+    pointer-events: auto;
+    margin-bottom: 100px;
+    max-width: 400px;
+    width: 80vw;
+    padding: 20px;
+}
+
+.onboardingText {
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 600;
+}
+.onboardingBlock {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    color: var(--ultralight-gray);
+    font-size: 14px;
+    font-weight: 600;
+
+}
+.onboardingButton {
+    background: transparent;
+    border: none;
+    color: var(--ultralight-gray);
+    font-size: 14px;
+    font-weight: 600;
+
+}
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeletonShine 1.5s infinite linear;
+    border: none;
+    overflow: hidden;
+    position: absolute;
+    width: 92vw;
+    height: 70vh;
+    border-radius: 8px;
+}
+
+@keyframes skeletonShine {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    width: 94vw;
+    flex: 1;
+    overflow-y: scroll;
+}
+.notCard {
+    background-color: var(--light-gray);
+    width: 100%;
+    padding: 2vh 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+}
+.notCardText {
+    font-size: 12px;
+    font-weight: 400;
+}
+.swipeFeedback {
+    position: absolute;
+    top: 45%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.notCardCatText {
+    text-align: left;
+    padding-bottom: 1vh;
+    padding-top: 2vh;
+    justify-content: flex-start;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.collectionsBlock {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.collectionCard {
+    position: relative;
+    overflow: hidden;
+    width: 46vw;
+    padding-bottom: 1vh;
+}
+
+.collectionImg {
+    width: 100%;
+    height: 7em;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.collectionTitle {
+    max-width: 46vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+}

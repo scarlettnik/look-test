@@ -1,0 +1,8 @@
+{
+  "appId": "com.prod.app",
+  "appName": "prod-team",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

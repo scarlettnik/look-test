@@ -1,0 +1,85 @@
+.searchWrapper {
+    position: sticky;
+    width: 100%;
+    z-index: 1;
+}
+
+.searchOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 99;
+}
+
+.searchContainer {
+    position: relative;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.searchHeaderWrapper {
+    position: relative;
+    background: var(--ultralight-gray);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.searchHeader {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.colorTransition {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: var(--ultralight-gray);
+    z-index: 1;
+}
+
+.searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    background: transparent;
+}
+
+.searchIcon, .clearIcon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.searchIcon img, .clearIcon img {
+    width: 30px;
+    height: 30px;
+}
+
+.suggestionsWrapper {
+    position: absolute;
+    width: 100%;
+    background: var(--white);
+    padding-top: 20px;
+    margin-top: -20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 0 0 20px 20px;
+    z-index: -1;
+}
+
+.suggestionItem {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
