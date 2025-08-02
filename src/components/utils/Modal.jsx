@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../ui/modal.module.css';
 
-const Modal = ({ isOpen, onClose, children, height }) => {
+const Modal = ({ isOpen, onClose, children }) => {
     const [shouldRender, setShouldRender] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
 
@@ -36,12 +36,10 @@ const Modal = ({ isOpen, onClose, children, height }) => {
     return (
         <div
             className={`${styles.backdrop} ${isClosing ? styles.backdropClosing : ''}`}
-
             onClick={onClose}
         >
             <div
                 className={`${styles.modal} ${isClosing ? styles.modalClosing : ''}`}
-                style={{height: height}}
                 onClick={(e) => e.stopPropagation()}
             >
                 <button className={styles.closeIcon} onClick={onClose}>

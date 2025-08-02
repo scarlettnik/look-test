@@ -13,50 +13,45 @@ const coverImages = [
     { url: 'https://avatars.mds.yandex.net/i?id=6c27e518e46665088413237506280fd3721711b6-10636720-images-thumbs&n=13' }
 ]
 
-// const SelectedCoverPreview = ({ imageUrl, title }) => (
-//     <div className={styles.selectedCover}>
-//         <img src={imageUrl} alt="Selected Cover"/>
-//         <div className={styles.overlay}></div>
-//         <span className={styles.coverText}>{title}</span>
-//     </div>
-// );
+const SelectedCoverPreview = ({ imageUrl, title }) => (
+    <div className={styles.selectedCover}>
+        <img src={imageUrl} alt="Selected Cover"/>
+        <div className={styles.overlay}></div>
+        <span className={styles.coverText}>{title}</span>
+    </div>
+);
 
 function AddList({
                      onCreate,
                      onUpdate,
-                     collection = null,
-                     coverImage
+                     collection = null // Передаем коллекцию для редактирования
                  })  {
-    console.log(coverImage)
     const [closetName, setClosetName] = useState('');
-    const [selectedCover, setSelectedCover] = useState(coverImage || '');
+    const [selectedCover, setSelectedCover] = useState(
+        collection?.url || coverImages[0].url
+    );
     const [keyboardHeight, setKeyboardHeight] = useState(0);
     const containerRef = useRef(null);
     const isKeyboardOpen = useIsKeyboardOpen()
 
-
-
-
     useEffect(() => {
         if (collection) {
             setClosetName(collection.name);
-            setSelectedCover(collection.cover_image_url || coverImage || '');
-        } else {
-            setSelectedCover(coverImage || coverImages[0].url);
+            setSelectedCover(collection.url);
         }
-    }, [collection, coverImage]);
+    }, [collection]);
 
     const handleSave = () => {
         if (!closetName.trim()) return;
 
         if (collection) {
-            onUpdate(closetName, selectedCover || coverImage);
+            onUpdate(closetName, selectedCover);
         } else {
             onCreate(closetName, selectedCover);
         }
     };
 
-    console.log(selectedCover)
+
 
     useEffect(() => {
         if (!window.visualViewport) return;
@@ -96,20 +91,12 @@ function AddList({
                 />
 
                 <label className={styles.label}>Обложка</label>
-                <div className={styles.selectedCover}>
-                    {selectedCover ? (
-                        <img
-                            src={selectedCover}
-                            alt="Selected cover"
-                            className={styles.previewImage}
-                        />
-                    ) : (
-                        <div className={styles.selectedCover} style={{backgroundColor: 'var(--light-gray)'}}/>
-                    )}
-                </div>
+                <SelectedCoverPreview
+                    imageUrl={selectedCover}
+                />
 
                 <div className={styles.coverGrid}>
-                {coverImages.map((img) => (
+                    {coverImages.map((img) => (
                         <div
                             key={img.url}
                             className={styles.coverThumbContainer}

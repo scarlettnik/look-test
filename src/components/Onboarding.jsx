@@ -55,8 +55,6 @@ export const Onboarding = observer(({
         setOnboardingStep, setUndoButtonHighlight,
         setsaveHighlight, setPopularHighlight, handleSaveChanges]);
 
-
-
     const renderOnboardingStep = () => {
         switch(onboardingStep) {
             case 1:

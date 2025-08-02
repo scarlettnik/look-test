@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import styles from './ui/TinderCards.module.css';
 import Sidebar from './Sidebar';
@@ -10,36 +10,12 @@ import {AUTH_TOKEN} from "../constants.js";
 import {runInAction} from "mobx";
 import {Onboarding} from "./Onboarding.jsx";
 import SaveToCollectionModal from "./SaveToCollectionsModal.jsx";
-import {useNavigate} from "react-router-dom";
 
-const VERTICAL_SWIPE_THRESHOLD_RATIO = 0.2;
-const HORIZONTAL_SWIPE_THRESHOLD_RATIO = 0.2;
+const VERTICAL_SWIPE_THRESHOLD_RATIO = 0.05;
+const HORIZONTAL_SWIPE_THRESHOLD_RATIO = 0.05;
+const ANIMATION_DURATION = 2000;
 const INITIAL_CARDS_COUNT = 3;
 const SKELETON_COUNT = 3;
-
-const swipeConfig = {
-    horizontal: {
-        threshold: 0.15,
-        speedMultiplier: 0.8,
-        rotationAngle: 25,
-        animationDuration: 800
-    },
-    verticalUp: {
-        threshold: 0.1,
-        speedMultiplier: 0.8,
-        animationDuration: 1000
-    },
-    verticalDown: {
-        threshold: 1000000000000000000,
-        speedMultiplier: 0.2,
-        animationDuration: 5000
-    },
-    physics: {
-        velocityThreshold: 0.9,
-        power: 0.2,
-        deceleration: 0.95
-    }
-};
 
 const TinderCards = observer(() => {
     const [swipeProgress, setSwipeProgress] = useState({ direction: null, opacity: 0 });
@@ -48,10 +24,8 @@ const TinderCards = observer(() => {
     const store = useStore();
     const [containerHeight, setContainerHeight] = useState(window.innerHeight);
     const containerRef = useRef(null);
-    const navigate = useNavigate()
-    const showOnboarding = !store?.authStore?.data?.preferences?.complete_onboarding;
 
-    console.log(showOnboarding)
+    const showOnboarding = !store?.authStore?.data?.preferences?.complete_onboarding;
 
     const [filters, setFilters] = useState({
         size: [],
@@ -60,44 +34,25 @@ const TinderCards = observer(() => {
         type: []
     });
 
-    const handleSaveSuccess = useCallback((productId, isSaved) => {
-        runInAction(() => {
-            // Обновляем состояние в catalogStore
-            const card = store.catalogStore.cards.find(c => c.id === productId);
-            if (card) {
-                card.is_contained_in_user_collections = isSaved;
-            }
 
-            // Обновляем состояние в popularStore (если товар есть там)
-            store.popular.popular.forEach(item => {
-                if (item.products) {
-                    const product = item.products.find(p => p.id === productId);
-                    if (product) {
-                        product.is_contained_in_user_collections = isSaved;
-                    }
-                }
-            });
-        });
-    }, [store]);
+    const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
+    const handleOpenSaveModal = (product) => {
+        setSelectedProduct(product);
+        setIsSaveModalOpen(true);
+    };
+
+    const handleCloseSaveModal = () => {
+        setIsSaveModalOpen(false);
+        setSelectedProduct(null);
+    };
 
     useEffect(() => {
         if (showOnboarding) {
             setOnboardingStep(1);
         }
     }, [showOnboarding]);
-
-    const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-
-    const handleOpenSaveModal = useCallback((product) => {
-        setSelectedProduct(product);
-        setIsSaveModalOpen(true);
-    }, []);
-
-    const handleCloseSaveModal = useCallback(() => {
-        setIsSaveModalOpen(false);
-        setSelectedProduct(null);
-    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -121,71 +76,42 @@ const TinderCards = observer(() => {
         }
     }, [store?.catalogStore.cards?.length]);
 
+    const animateSwipe = useCallback((direction, cardId) => {
+        const card = document.getElementById(cardId);
+        if (!card) return;
 
+        const { innerWidth, innerHeight } = window;
+        const rotation = direction === 'right' ? 25 : -25;
 
-    const sendInteraction = async (productId, action) => {
-        try {
-            const response = await fetch(`https://api.lookvogue.ru/v1/interaction/product/${productId}`, {
-                method: 'PUT',
-                headers: {
-                    "Authorization": `tma ${AUTH_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    interaction_type: action
-                })
-            });
+        card.style.transition = `all ${ANIMATION_DURATION}ms cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
 
-            if (response.ok) {
-                console.log(response)
-            }
-        } catch (error) {
-            console.error('Error sending interaction:', error);
+        switch(direction) {
+            case 'left':
+                card.style.transform = `translate(-${innerWidth * 2}px, 0) rotate(${rotation}deg)`;
+                break;
+            case 'right':
+                card.style.transform = `translate(${innerWidth * 2}px, 0) rotate(${rotation}deg)`;
+                break;
+            case 'up':
+                card.style.transform = `translate(0, -${innerHeight * 2}px) rotate(0deg)`;
+                break;
+            case 'down':
+                return;
         }
-    };
 
+        card.style.opacity = '0';
+    }, []);
 
     const handleSwipe = useCallback((direction, card) => {
         if (direction === 'down') return;
 
-        // Определяем тип взаимодействия
-        const action = direction === 'right' ? 'like' : 'dislike';
-
-        // Отправляем запрос
-        sendInteraction(card.id, action);
-
-        const duration = direction === 'up'
-            ? swipeConfig.verticalUp.animationDuration
-            : swipeConfig.horizontal.animationDuration;
-
-        const cardElement = document.getElementById(card.id);
-        if (cardElement) {
-            const rotation = direction === 'right'
-                ? swipeConfig.horizontal.rotationAngle
-                : -swipeConfig.horizontal.rotationAngle;
-
-            cardElement.style.transition = `all ${duration}ms linear`;
-
-            switch(direction) {
-                case 'left':
-                    cardElement.style.transform = `translate(-${window.innerWidth * 2}px, 0) rotate(${rotation}deg)`;
-                    break;
-                case 'right':
-                    cardElement.style.transform = `translate(${window.innerWidth * 2}px, 0) rotate(${rotation}deg)`;
-                    break;
-                case 'up':
-                    cardElement.style.transform = `translate(0, -${window.innerHeight * 2}px) rotate(0deg)`;
-                    break;
-            }
-        }
-
+        animateSwipe(direction, card.id);
         setSwipeProgress({ direction: null, opacity: 0 });
 
         setTimeout(() => {
             store.catalogStore.handleSwipe(direction, card);
-        }, duration/2);
-    }, [swipeConfig]);
-
+        }, 50);
+    }, [animateSwipe, ANIMATION_DURATION]);
 
     const updateSwipeFeedback = useCallback((dx, dy) => {
         const swipeThreshold = window.innerWidth * HORIZONTAL_SWIPE_THRESHOLD_RATIO;
@@ -196,10 +122,10 @@ const TinderCards = observer(() => {
 
         if (Math.abs(dx) > Math.abs(dy * 1.5)) {
             direction = dx > 0 ? 'right' : 'left';
-            opacity = Math.min(1);
+            opacity = Math.min(Math.abs(dx) / swipeThreshold, 1);
         } else if (dy < -verticalThreshold) {
             direction = 'up';
-            opacity = Math.min( 1);
+            opacity = Math.min(Math.abs(dy) / verticalThreshold, 1);
         }
 
         setSwipeProgress({ direction, opacity });
@@ -219,6 +145,7 @@ const TinderCards = observer(() => {
             delete cardRefs.current[id];
         }
     }, []);
+
 
     const handleSaveChanges = async () => {
         try {
@@ -261,74 +188,40 @@ const TinderCards = observer(() => {
         if (!cardRef) return;
 
         setIsOnboardingActive(true);
-        setIsAnimating(true);
+        setIsAnimating(true); // Устанавливаем флаг анимации
 
-        // 1. Создаем иконку фильтра динамически
-        const createFeedbackIcon = (side) => {
-            const icon = document.createElement('div');
-            icon.className = `${styles.swipeFeedback} ${styles[`swipeFeedback${side}`]} ${styles.onboardingIcon}`;
-            icon.innerHTML = `<img src="/subicons/filter.svg" alt="Filter" style="width:40px;height:40px"/>`;
-            return icon;
+        const computedStyle = window.getComputedStyle(cardRef);
+        const originalStyles = {
+            transform: computedStyle.transform,
+            transition: computedStyle.transition,
+            opacity: computedStyle.opacity,
+            zIndex: computedStyle.zIndex
         };
 
-        // 2. Добавляем иконку на карточку
-        const feedbackIcon = createFeedbackIcon(direction === 'right' ? 'Left' : 'Right');
-        cardRef.appendChild(feedbackIcon);
-
-        // 3. Показываем иконку с анимацией
-        setTimeout(() => {
-            feedbackIcon.style.opacity = '1';
-            feedbackIcon.style.transform = 'translateY(-50%) scale(1.2)';
-        }, 50);
-
-        // 4. Параметры анимации свайпа
         const params = {
-            left: {
-                endX: -window.innerWidth * 0.7,
-                endY: 0,
-                rotation: -15
-            },
-            right: {
-                endX: window.innerWidth * 0.7,
-                endY: 0,
-                rotation: 15
-            },
-            up: {
-                endX: window.innerWidth * 0.5,
-                endY: -window.innerHeight * 0.5,
-                rotation: 5
-            }
+            left: { endX: -window.innerWidth * 0.7, endY: 0, rotation: -15 },
+            right: { endX: window.innerWidth * 0.7, endY: 0, rotation: 15 },
+            up: { endX: window.innerWidth * 0.5, endY: -window.innerHeight * 0.5, rotation: 5 }
         }[direction];
 
-        const originalStyles = {
-            transform: cardRef.style.transform,
-            transition: cardRef.style.transition,
-            opacity: cardRef.style.opacity,
-            zIndex: cardRef.style.zIndex
-        };
-
-        cardRef.style.transition = 'transform 800ms ease-out, opacity 800ms ease-out';
+        cardRef.style.transition = 'transform 500ms ease-out, opacity 500ms ease-out';
         cardRef.style.transform = `translate(${params.endX}px, ${params.endY}px) rotate(${params.rotation}deg)`;
         cardRef.style.zIndex = '10000';
 
         setTimeout(() => {
-            // Удаляем иконку фильтра
-            feedbackIcon.style.opacity = '0';
-            feedbackIcon.style.transform = 'translateY(-50%) scale(0.5)';
-
-            cardRef.style.transition = 'transform 300ms ease-out, opacity 300ms ease-out';
+            cardRef.style.transition = 'transform 100ms ease-out, opacity 500ms ease-out';
             cardRef.style.transform = originalStyles.transform;
+            cardRef.style.opacity = originalStyles.opacity;
 
             setTimeout(() => {
-                // Окончательная очистка
-                cardRef.removeChild(feedbackIcon);
                 cardRef.style.transition = originalStyles.transition;
                 cardRef.style.zIndex = originalStyles.zIndex;
                 setIsOnboardingActive(false);
                 setIsAnimating(false);
-            }, 300);
-        }, 800);
+            }, 500);
+        }, 1000);
     }, [store.catalogStore.cards, isAnimating]);
+
 
     return (
         <>
@@ -366,7 +259,6 @@ const TinderCards = observer(() => {
                             updateSwipeFeedback={updateSwipeFeedback}
                             zIndex={store.catalogStore.cards.length - index}
                             offset={index}
-                            swipeConfig={swipeConfig}
                             isExpanded={expandedCardId === card.id}
                             onExpand={() => setExpandedCardId(card.id)}
                             onCollapse={() => setExpandedCardId(null)}
@@ -374,35 +266,14 @@ const TinderCards = observer(() => {
                             swipeProgress={index === 0 ? swipeProgress : {direction: null, opacity: 0}}
                             isTopCard={index === 0}
                             setCardRef={setCardRef}
-                            isOnboardingActive={showOnboarding && index === 0}
+                            isOnboardingActive={isOnboardingActive && index === 0}
                             onSaveClick={handleOpenSaveModal}
                         />
                     ))}
 
                     {!store.catalogStore.loading && store.catalogStore.cards?.length === 0 && (
                         <div className={styles.emptyState}>
-                            <div className={styles.notCard}>
-                                <p  className={styles.notCardText}>Товары из ассортимента брендов закончились</p>
-                            </div>
-                            <p className={styles.notCardCatText}>
-                                Но можно посмотреть подборки
-                            </p>
-                            <div className={styles.collectionsBlock}>
-                                {store?.popular?.collections?.map((item) => (
-                                    <div
-                                        key={`${item.id}`}
-                                        className={styles.collectionCard}
-                                        onClick={() => navigate(`/trands/collection/${item.id}`)}
-                                    >
-                                        <img
-                                            className={styles.collectionImg}
-                                            src={item.cover_image_url}
-                                            alt={item.name}
-                                        />
-                                        <p className={styles.collectionTitle}>{item.name}</p>
-                                    </div>))}
-                            </div>
-
+                            <h2>No more cards!</h2>
                         </div>
                     )}
                 </div>
@@ -427,19 +298,14 @@ const TinderCards = observer(() => {
                     setPopularHighlight={setPopularHighlight}
 
                 />
+                <SaveToCollectionModal
+                    isOpen={isSaveModalOpen}
+                    onClose={handleCloseSaveModal}
+                    productId={selectedProduct?.id}
+                    productName={selectedProduct?.name}
+                />
             </div>
-            <SaveToCollectionModal
-                isOpen={isSaveModalOpen}
-                onClose={handleCloseSaveModal}
-                productId={selectedProduct?.id}
-                productName={selectedProduct?.name}
-                productInCollection={selectedProduct?.is_contained_in_user_collections}
-                onSaveSuccess={(isSaved) => {
-                    if (selectedProduct) {
-                        handleSaveSuccess(selectedProduct.id, isSaved);
-                    }
-                }}
-            />
+
         </>
     );
 });

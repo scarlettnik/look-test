@@ -5,8 +5,6 @@ import CartStore from "./provider/cardStore";
 import CatalogStore from "./provider/catalogStore";
 import Onboarding from "./provider/Onboarding";
 import PopularStore from "./provider/PopularStore";
-import HelpStore from "./provider/HelpStore"; // Новый импорт
-
 
 class AppStore {
     authStore = new AuthStore(this);
@@ -15,7 +13,7 @@ class AppStore {
     catalogStore = new CatalogStore(this);
     onboarding = new Onboarding(this);
     popular = new PopularStore(this);
-    help = new HelpStore(this);
+
     constructor() {
         makeAutoObservable(this);
     }
