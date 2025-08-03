@@ -14,7 +14,6 @@ class PopularStore {
 
     constructor() {
         makeAutoObservable(this);
-        this.fetchCollections();
     }
 
     fetchTrends = async () => {
