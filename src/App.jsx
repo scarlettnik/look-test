@@ -7,7 +7,7 @@ import Comparing from "./components/Comparing.jsx";
 import Save from "./components/Save.jsx";
 import Preferences from "./components/Preferences.jsx";
 import ShoppingCard from "./components/ShoppingCard.jsx";
-import Compilation from "./components/Сompilation.jsx";
+import Compilation from "./components/Compilation.jsx";
 import {AuthProvider, useAuth} from "./provider/AuthProvider.jsx";
 import Product from "./components/Product.jsx";
 import AddList from "./components/AddList.jsx";
@@ -21,13 +21,13 @@ import PopularCollection from "./components/PopularCollection.jsx";
 function App() {
     return (
 
-            <StoreProvider>
-                <AuthProvider>
-                    <Router>
-                        <AppContent />
-                    </Router>
-                </AuthProvider>
-            </StoreProvider>
+        <StoreProvider>
+            <AuthProvider>
+                <Router>
+                    <AppContent />
+                </Router>
+            </AuthProvider>
+        </StoreProvider>
 
     );
 }
@@ -47,8 +47,9 @@ function AppContent() {
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/save" element={<Save/>}/>
                 <Route path="/save/:id" element={<Compilation/>}/>
+                <Route path="/collection/:id" element={<Compilation/>}/>
                 <Route path="/save/:id/product/:id" element={<ProductPage/>}/>
-                <Route path="/trands/collection/:id/product/:id" element={<ProductPage/>}/>
+                <Route path="/trands/product/:id" element={<ProductPage/>}/>
                 <Route path='/shoppingcard' element={<ShoppingCard/>}/>
                 <Route path='/pref' element={<Preferences/>}/>
                 <Route path='/trands' element={<Comparing/>}/>
