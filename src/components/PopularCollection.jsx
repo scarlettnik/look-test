@@ -1,77 +1,60 @@
-import React, {useEffect, useState, useCallback} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import {useStore} from "../provider/StoreContext.jsx";
 import styles from './ui/popualCollection.module.css';
+import React, {useEffect, useState} from "react";
 import Sidebar from "./Sidebar.jsx";
 import CustomSkeleton from "./utils/CustomSkeleton.jsx";
+import Modal from "./utils/Modal.jsx";
 import SaveToCollectionModal from "./SaveToCollectionsModal.jsx";
 
 const PopularCollection = observer(() => {
     const { id } = useParams();
     const navigate = useNavigate();
     const store = useStore();
+    const [isShareOpen, setIsShareOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+
+    console.log(id)
+    console.log(store)
+
+    useEffect(() => {
+        store.collectionStore.loadCollection(id);
+    }, [id, location.pathname]);
+
+    const { currentCollection: save, loading } = store.collectionStore;
+    const currentItem = store.popular.popular.find(item => item.id === id);
+
     const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-    const [collectionImage, setCollectionImage] = useState('');
-    const [collectionName, setCollectionName] = useState('');
 
-    const { currentCollection: collection, loading } = store.collectionStore;
-    const currentItem = store.popular.popular.find(item => item.id === id) || {};
-
-    useEffect(() => {
-        const loadCollection = async () => {
-            await store.collectionStore.loadCollection(id, false);
-            if (store.collectionStore.currentCollection) {
-                setCollectionImage(store.collectionStore.currentCollection.cover_image_url);
-                setCollectionName(store.collectionStore.currentCollection.name);
-            }
-        };
-        loadCollection();
-    }, [id, store.collectionStore]);
-
-    useEffect(() => {
-        if (currentItem.cover_image_url) {
-            setCollectionImage(currentItem.cover_image_url);
-        }
-        if (currentItem.name && !collectionName) {
-            setCollectionName(currentItem.name);
-        }
-    }, [currentItem.cover_image_url, currentItem.name, collectionName]);
-
-    const handleOpenSaveModal = useCallback((product) => {
+    const handleOpenSaveModal = (product) => {
         setSelectedProduct(product);
         setIsSaveModalOpen(true);
-    }, []);
+    };
 
-    const handleCloseSaveModal = useCallback(() => {
+    const handleCloseSaveModal = () => {
         setIsSaveModalOpen(false);
         setSelectedProduct(null);
-    }, []);
+    };
+
+
+
+    if (!currentItem) {
+        return <div>Коллекция не найдена</div>;
+    }
 
     return (
         <div className={styles.container}>
             <div className={styles.stepHeader}>
-                <button className={styles.backButton} onClick={() => navigate(-1)}>
+                <button
+                    className={styles.backButton}
+                    onClick={() => navigate(-1)}
+                >
                     <img src='/subicons/arrowleft.svg' className={styles.backButtonImg} alt="Назад"/>
                 </button>
-                <p className={styles.stepTitle}>{collectionName || ''}</p>
+                <p className={styles.stepTitle}>{currentItem.name}</p>
             </div>
-
-            <div className={styles.collectionImageWrapper}>
-                {loading ? (
-                    <CustomSkeleton
-                        className={styles.collectionImage}
-
-                    />
-                ): (<img
-                    className={styles.collectionImage}
-                    src={collectionImage}
-                    alt={collectionName}
-                />)
-                }
-            </div>
-
+            <img className={styles.collectionImage} src={currentItem.cover_image_url}/>
             <div className={styles.cardContainer}>
                 {loading ? (
                     [...Array(8)].map((_, i) => (
@@ -82,16 +65,23 @@ const PopularCollection = observer(() => {
                         />
                     ))
                 ) : (
-                    collection?.products?.map((item) => (
-                        <ProductCard
-                            key={item.id}
-                            item={item}
-                            onSaveClick={handleOpenSaveModal}
-                        />
+                    save?.products?.map((item) => (
+                        <div key={item.id} className={styles.productWrapper}>
+                            <img
+                                className={styles.card}
+                                src={item.image_urls[0]}
+                                alt={item.name}
+                            />
+                            <button
+                                className={styles.saveIcon}
+                                onClick={() => handleOpenSaveModal(item)}
+                            >
+                                <img src="/menuIcons/unactive/save.svg" alt="Сохранить" />
+                            </button>
+                        </div>
                     ))
                 )}
             </div>
-
             <Sidebar/>
 
             <SaveToCollectionModal
@@ -99,41 +89,9 @@ const PopularCollection = observer(() => {
                 onClose={handleCloseSaveModal}
                 productId={selectedProduct?.id}
                 productName={selectedProduct?.name}
-                productInCollection={selectedProduct?.is_contained_in_user_collections}
             />
         </div>
     );
 });
-const ProductCard = ({ item, onSaveClick }) => {
-    const navigate = useNavigate();
-
-    return (
-        <div className={styles.productWrapper}>
-            <img
-                onClick={() => navigate(`/trands/product/${item.id}`)}
-                className={styles.card}
-                src={item.image_urls?.[0] || '/placeholder-product.jpg'}
-                alt={item.name}
-                onError={(e) => {
-                    e.target.src = '/placeholder-product.jpg';
-                }}
-            />
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    onSaveClick(item);
-                }}
-            >
-                <img
-                    className={styles.saveIcon}
-                    src={item.is_contained_in_user_collections
-                        ? "/menuIcons/active/save.svg"
-                        : "/menuIcons/unactive/save.svg"}
-                    alt={item.is_contained_in_user_collections ? "Сохранено" : "Сохранить"}
-                />
-            </button>
-        </div>
-    );
-};
 
 export default PopularCollection;

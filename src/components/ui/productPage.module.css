@@ -114,10 +114,12 @@
 .bar {
     display: flex;
     overflow-x: auto;
+    background-color: #fff;
     z-index: 1;
     position: sticky;
     top: 0;
     scrollbar-width: none;
+    padding: 8px 0;
     gap: 8px;
     flex-wrap: nowrap;
     width: 96vw;
@@ -133,18 +135,15 @@
     text-align: center;
     white-space: nowrap;
     font-size: 12px;
-    border-bottom: 1px solid var(--light-gray);
-
-
 }
 .sizeOption.active {
     border-color: 1px solid var(--black);
+    background-color: var(--white);
 }
 .colorTitle {
     font-size: 12px;
     font-weight: 400;
     padding-left: 5px;
-
 }
 .colorCircle {
     width: 30px;
@@ -153,40 +152,8 @@
     transition: all 0.3s ease;
     margin: 5px;
     border: 1px solid var(--light-gray);
-
-}
-.colorCircleWrapper {
-    display: flex;
-    flex-direction: row; /* Изменено с column на row */
-    align-items: center;
-    cursor: pointer;
-    overflow-x: auto; /* Добавлено для горизонтального скролла */
-    white-space: nowrap; /* Предотвращает перенос элементов */
-}
-.colorsContainer {
-    width: 100%;
-    overflow-x: auto;
-    padding: 8px 0;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    display: flex;
-    flex-direction: row;
-}
-.colorHeader {
-    display: flex;
-    align-items: center;
-}
-.colorsContainer::-webkit-scrollbar {
-    display: none;
 }
 
-.colorCircleWrapper {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 4px 8px;
-    flex-shrink: 0;
-}
 .colorCircle.selected {
     border: 1px solid var(--black);
     transform: scale(1.2);
