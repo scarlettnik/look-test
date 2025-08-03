@@ -1,13 +1,15 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-
-
 import styles from "./ui/compilation.module.css";
+import { observer } from "mobx-react-lite";
 
-export const FilterBar = ({ filters, setFilters, catalogStore, products, onFilter }) => {
+export const FilterBar = observer(({ filters, setFilters, catalogStore, products, onFilter }) => {
     const [activeFilter, setActiveFilter] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+
+    const store = useStore();
+    console.log(store.help)
 
     const handleBack = () => navigate(-1);
 
@@ -23,10 +25,10 @@ export const FilterBar = ({ filters, setFilters, catalogStore, products, onFilte
 
     const renderFilterModal = () => {
         switch (activeFilter) {
-            case 'size': return <SizeFilter applyFilter={applyFilter} currentValue={filters.size} />;
-            case 'brand': return <BrandFilter applyFilter={applyFilter} currentValue={filters.brand} />;
-            case 'price': return <PriceFilter applyFilter={applyFilter} currentValue={filters.price} />;
-            case 'type': return <TypeFilter applyFilter={applyFilter} currentValue={filters.type} />;
+            case 'size': return <SizeFilter applyFilter={applyFilter} currentValue={filters.size} onClose={closeFilter} />;
+            case 'brand': return <BrandFilter applyFilter={applyFilter} currentValue={filters.brand} onClose={closeFilter}/>;
+            case 'price': return <PriceFilter applyFilter={applyFilter} currentValue={filters.price} onClose={closeFilter}/>;
+            case 'type': return <TypeFilter applyFilter={applyFilter} currentValue={filters.type} onClose={closeFilter}/>;
             default: return null;
         }
     };
@@ -60,24 +62,22 @@ export const FilterBar = ({ filters, setFilters, catalogStore, products, onFilte
             closeFilter();
         }
     };
-
     const applyFilters = (updatedFilters) => {
         if (catalogStore) {
-            // Режим API
             const apiFilters = {
-                categories: updatedFilters.size || [],
+                size: updatedFilters.size || [],
                 brands: updatedFilters.brand || [],
+                colors: updatedFilters.type || [],
                 min_price: updatedFilters.price?.min || null,
-                max_price: updatedFilters.price?.max || null,
-                colors: updatedFilters.type || []
+                max_price: updatedFilters.price?.max || null
             };
             catalogStore.applyFilters(apiFilters);
         } else if (onFilter) {
-            // Локальный режим
             const filtered = filterProducts(products || [], updatedFilters);
             onFilter(filtered);
         }
     };
+
 
     const clearFilter = (filterName, e) => {
         e.stopPropagation();
@@ -159,28 +159,49 @@ export const FilterBar = ({ filters, setFilters, catalogStore, products, onFilte
             {isModalOpen && renderFilterModal()}
         </>
     );
-};
+});
 
-const SizeFilter = ({ applyFilter, currentValue }) => {
+const SizeFilter = ({ applyFilter, currentValue, onClose }) => {
     const [selected, setSelected] = useState(currentValue || []);
 
-    const toggle = (val) => setSelected(prev =>
-        prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]
-    );
+    const toggleSize = (size) => {
+        setSelected(prev =>
+            prev.includes(size)
+                ? prev.filter(v => v !== size)
+                : [...prev, size]
+        );
+    };
 
+    const handleApply = () => {
+        const flattenedSizes = selected.flatMap(size => {
+            if (size === 'NO SIZE') return ['NO SIZE'];
+            if (size.includes('/')) {
+                const [name, range] = size.split('/').map(s => s.trim());
+                const [min, max] = range.split('-').map(s => s.trim());
+                return [name, min, max];
+            }
+            return [size];
+        });
+        console.log(flattenedSizes)
+
+        applyFilter(flattenedSizes);
+        onClose();
+    };
     return (
         <FullScreenModal
             title="Размер"
-            onClose={() => applyFilter(null)}
-            onApply={() => applyFilter(selected)}
+            onClose={onClose}
+            onApply={handleApply}
             applyDisabled={!selected.length}
         >
             <div className={styles.gridOptions}>
                 {SIZES.map(size => (
                     <button
                         key={size}
-                        className={`${styles.optionButton} ${selected.includes(size) ? styles.selected : ''}`}
-                        onClick={() => toggle(size)}
+                        className={`${styles.optionButton} ${
+                            selected.includes(size) ? styles.selected : ''
+                        }`}
+                        onClick={() => toggleSize(size)}
                     >
                         {size === 'NO SIZE' ? 'Один размер' : size}
                     </button>
@@ -190,16 +211,39 @@ const SizeFilter = ({ applyFilter, currentValue }) => {
     );
 };
 
-const BrandFilter = ({ applyFilter, currentValue }) => {
-    const brands = ['Bershka', 'Zara', 'H&M', 'Zarina', 'Gloria Jeans', 'Gucci', 'Nike', 'Puma'];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const BrandFilter = ({ applyFilter, currentValue, onClose }) => {
     const [selected, setSelected] = useState(currentValue || []);
+    const store = useStore();
 
     const toggle = (val) => setSelected(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
 
     return (
-        <FullScreenModal title="Бренд" onClose={() => applyFilter(null)} onApply={() => applyFilter(selected)} applyDisabled={!selected.length}>
+        <FullScreenModal title="Бренд" onClose={onClose} onApply={() => applyFilter(selected)} applyDisabled={!selected.length}>
             <div className={styles.gridOptions}>
-                {brands.map((brand, i) => (
+                {store?.help?.metaData?.brands.map((brand, i) => (
                     <button key={i} className={`${styles.optionButton} ${selected.includes(brand) ? styles.selected : ''}`} onClick={() => toggle(brand)}>
                         {brand}
                     </button>
@@ -209,14 +253,14 @@ const BrandFilter = ({ applyFilter, currentValue }) => {
     );
 };
 
-const TypeFilter = ({ applyFilter, currentValue }) => {
+const TypeFilter = ({ applyFilter, currentValue, onClose }) => {
     const types = ['Одежда', 'Обувь', 'Аксессуары', 'Электроника'];
     const [selected, setSelected] = useState(currentValue || []);
 
     const toggle = (val) => setSelected(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]);
 
     return (
-        <FullScreenModal title="Тип" onClose={() => applyFilter(null)} onApply={() => applyFilter(selected)} applyDisabled={!selected.length}>
+        <FullScreenModal title="Тип" onClose={onClose} onApply={() => applyFilter(selected)} applyDisabled={!selected.length}>
             <div className={styles.gridOptions}>
                 {types.map((type, i) => (
                     <button key={i} className={`${styles.optionButton} ${selected.includes(type) ? styles.selected : ''}`} onClick={() => toggle(type)}>
@@ -227,7 +271,7 @@ const TypeFilter = ({ applyFilter, currentValue }) => {
         </FullScreenModal>
     );
 };
-const PriceFilter = ({ applyFilter, currentValue }) => {
+const PriceFilter = ({ applyFilter, currentValue, onClose }) => {
     const [min, setMin] = useState(currentValue?.min || '');
     const [max, setMax] = useState(currentValue?.max || '');
 
@@ -249,7 +293,7 @@ const PriceFilter = ({ applyFilter, currentValue }) => {
     return (
         <FullScreenModal
             title="Стоимость"
-            onClose={() => applyFilter(null)}
+            onClose={onClose}
             onApply={apply}
             applyDisabled={!min && !max}
         >
@@ -262,7 +306,7 @@ const PriceFilter = ({ applyFilter, currentValue }) => {
                         value={min}
                         onChange={(e) => setMin(e.target.value)}
                     />
-               </div>
+                </div>
 
                 <span>-</span>
 
@@ -294,7 +338,8 @@ const PriceFilter = ({ applyFilter, currentValue }) => {
 
 import stylesM from './ui/fullScreenModal.module.css';
 import {filterProducts} from "./utils/incideFilter.js";
-import {SIZES} from "../constants.js";
+import {BRANDS, SIZES} from "../constants.js";
+import {useStore} from "../provider/StoreContext.jsx";
 
 const FullScreenModal = ({ title, onClose, onApply, children, applyDisabled = false }) => {
     return (
@@ -318,5 +363,5 @@ const FullScreenModal = ({ title, onClose, onApply, children, applyDisabled = fa
             </div>
         </div>
     );
-};
+}
 

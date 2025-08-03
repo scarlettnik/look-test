@@ -12,21 +12,25 @@ class CatalogStore {
     authToken = AUTH_TOKEN;
     currentSearchQuery = '';
     currentOffset = 0;
-    limit = 10;
+    limit = 50;
     currentFilters = {
         categories: [],
         colors: [],
         brands: [],
         min_price: null,
-        max_price: null
+        max_price: null,
     };
-    lastSearchQuery = null;
-
     constructor() {
         makeAutoObservable(this);
         this.fetchCards(true); // initial load
     }
+    setLastSearchQuery = (query) => {
+        this.currentSearchQuery = query;
+    };
 
+    clearLastSearchQuery = () => {
+        this.currentSearchQuery = '';
+    };
     getUniqueKey = () => {
         if (typeof crypto !== 'undefined' && crypto.randomUUID) {
             return crypto.randomUUID();
@@ -40,13 +44,6 @@ class CatalogStore {
         'Authorization': `tma ${this.authToken}`
     });
 
-    setLastSearchQuery = (query) => {
-        this.lastSearchQuery = query;
-    };
-
-    clearLastSearchQuery = () => {
-        this.lastSearchQuery = null;
-    };
     fetchCards = flow(function* (initialLoad = false) {
         if (!this.hasMore || this.isFetching) return;
 
@@ -63,13 +60,13 @@ class CatalogStore {
             url.searchParams.append('limit', this.limit);
             const requestBody = {
                 query: this.currentSearchQuery,
-                categories: this.currentFilters.categories,
+                sizes: this.currentFilters.categories,
                 colors: this.currentFilters.colors,
                 brands: this.currentFilters.brands,
                 min_price: this.currentFilters.min_price,
                 max_price: this.currentFilters.max_price,
+                //categories: this.currentFilters.categories
             };
-            console.log(requestBody);
 
             const response = yield fetch(url.toString(), {
                 method: 'POST',
@@ -135,8 +132,11 @@ class CatalogStore {
 
     applyFilters = flow(function* (newFilters) {
         this.currentFilters = {
-            ...this.currentFilters,
-            ...newFilters
+            categories: newFilters.size || [], // Используем size для categories
+            colors: newFilters.colors || [],
+            brands: newFilters.brands || [],
+            min_price: newFilters.min_price || null,
+            max_price: newFilters.max_price || null
         };
         this.hasMore = true;
         yield this.fetchCards(true);
