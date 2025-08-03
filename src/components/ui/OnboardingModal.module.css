@@ -184,3 +184,9 @@
     text-align: left;
     padding: 0 4vw;
 }
+.styleCheckbox {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+}

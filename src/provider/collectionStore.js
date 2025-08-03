@@ -1,5 +1,5 @@
 // CollectionStore.js
-import { makeAutoObservable } from 'mobx';
+import {makeAutoObservable, runInAction} from 'mobx';
 import { AUTH_TOKEN } from "../constants.js";
 
 class CollectionStore {
@@ -102,6 +102,46 @@ class CollectionStore {
             this.loading = false;
         }
     }
+
+
+    async removeProductsFromCollection(collectionId, productIds) {
+        try {
+            const response = await fetch('https://api.lookvogue.ru/v1/collection/products', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `tma ${AUTH_TOKEN}`
+                },
+                body: JSON.stringify({
+                    collection_ids: [collectionId],
+                    product_ids: productIds
+                })
+            });
+
+            if (!response.ok) throw new Error('Ошибка удаления товаров');
+
+            runInAction(() => {
+                if (this.currentCollection?.id === collectionId) {
+                    this.currentCollection.products = this.currentCollection.products.filter(
+                        product => !productIds.includes(product.id)
+                    );
+                }
+            });
+        } catch (error) {
+            console.error('Ошибка удаления товаров:', error);
+            throw error;
+        }
+    }
+    updateCollectionLocal = (collectionId, updates) => {
+        if (this.currentCollection && this.currentCollection.id === collectionId) {
+            this.currentCollection = {
+                ...this.currentCollection,
+                ...updates
+            };
+        }
+        // Также можно обновить в списке коллекций, если нужно
+    };
+
 }
 
 export default CollectionStore;

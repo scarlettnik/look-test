@@ -1,42 +1,65 @@
+.container {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .title {
-    text-align: center;
-    margin-bottom: 16px;
+    text-align: left;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
+    color: #000;
+    margin: 20px;
 }
 
-.icons {
-    display: flex;
-    justify-content: center;
+.scrollContainer {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollContent {
+    display: inline-flex;
     gap: 16px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
+    padding: 0 8px;
 }
 
-.copyIcon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    border: none;
-    font-size: 20px;
+.scrollItem {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    min-width: 72px;
+}
+
+.iconContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.iconLabel {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+}
+
+.copyButton {
+    margin: 3vw;
 }
 
 .toast {
-    position: absolute;
-    bottom: 10px;
+    position: fixed;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
     font-size: 14px;
-    animation: fadeInOut 2s ease forwards;
+    animation: fadeInOut 2s ease-in-out;
+    z-index: 1000;
 }
 
 @keyframes fadeInOut {
@@ -46,3 +69,11 @@
     100% { opacity: 0; }
 }
 
+.scrollContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollContainer {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
